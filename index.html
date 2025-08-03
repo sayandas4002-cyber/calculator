@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Functional Calculator</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: #121212;
+      font-family: Arial, sans-serif;
+    }
+
+    .calculator {
+      background: #1f1f1f;
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 0 15px #000;
+    }
+
+    .display {
+      width: 100%;
+      height: 60px;
+      background: #000;
+      color: #0f0;
+      font-size: 2em;
+      text-align: right;
+      padding: 10px;
+      border-radius: 10px;
+      margin-bottom: 10px;
+      box-sizing: border-box;
+    }
+
+    .buttons {
+      display: grid;
+      grid-template-columns: repeat(4, 60px);
+      grid-gap: 10px;
+    }
+
+    button {
+      height: 60px;
+      font-size: 1.2em;
+      border: none;
+      border-radius: 10px;
+      background: #2c2c2c;
+      color: #fff;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    button:hover {
+      background: #444;
+    }
+
+    button.operator {
+      background: #ff9500;
+    }
+
+    button.operator:hover {
+      background: #e08900;
+    }
+
+    button.equal {
+      background: #28a745;
+      grid-column: span 2;
+    }
+
+    button.equal:hover {
+      background: #218838;
+    }
+  </style>
+</head>
+<body>
+
+<div class="calculator">
+  <div id="display" class="display">0</div>
+  <div class="buttons">
+    <button onclick="clearDisplay()">C</button>
+    <button onclick="deleteLast()">DEL</button>
+    <button onclick="appendOperator('%')">%</button>
+    <button class="operator" onclick="appendOperator('/')">/</button>
+
+    <button onclick="appendNumber('7')">7</button>
+    <button onclick="appendNumber('8')">8</button>
+    <button onclick="appendNumber('9')">9</button>
+    <button class="operator" onclick="appendOperator('*')">*</button>
+
+    <button onclick="appendNumber('4')">4</button>
+    <button onclick="appendNumber('5')">5</button>
+    <button onclick="appendNumber('6')">6</button>
+    <button class="operator" onclick="appendOperator('-')">-</button>
+
+    <button onclick="appendNumber('1')">1</button>
+    <button onclick="appendNumber('2')">2</button>
+    <button onclick="appendNumber('3')">3</button>
+    <button class="operator" onclick="appendOperator('+')">+</button>
+
+    <button onclick="appendNumber('0')">0</button>
+    <button onclick="appendNumber('.')">.</button>
+    <button class="equal" onclick="calculateResult()">=</button>
+  </div>
+</div>
+
+<script>
+  let display = document.getElementById('display');
+
+  function appendNumber(number) {
+    if (display.innerText === '0') {
+      display.innerText = number;
+    } else {
+      display.innerText += number;
+    }
+  }
+
+  function appendOperator(operator) {
+    let lastChar = display.innerText.slice(-1);
+    if ("+-*/%".includes(lastChar)) {
+      display.innerText = display.innerText.slice(0, -1) + operator;
+    } else {
+      display.innerText += operator;
+    }
+  }
+
+  function clearDisplay() {
+    display.innerText = '0';
+  }
+
+  function deleteLast() {
+    if (display.innerText.length === 1 || display.innerText === 'Error') {
+      display.innerText = '0';
+    } else {
+      display.innerText = display.innerText.slice(0, -1);
+    }
+  }
+
+  function calculateResult() {
+    try {
+      display.innerText = eval(display.innerText);
+    } catch {
+      display.innerText = 'Error';
+    }
+  }
+
+  // Optional: support keyboard input
+  document.addEventListener('keydown', function(e) {
+    const key = e.key;
+    if (!isNaN(key) || key === '.') {
+      appendNumber(key);
+    } else if ("+-*/%".includes(key)) {
+      appendOperator(key);
+    } else if (key === 'Enter') {
+      e.preventDefault();
+      calculateResult();
+    } else if (key === 'Backspace') {
+      deleteLast();
+    } else if (key === 'Escape') {
+      clearDisplay();
+    }
+  });
+</script>
+
+</body>
+</html>
